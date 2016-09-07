@@ -50,43 +50,43 @@
 //callback ___________________
 //
 
-class Stops () {
-  constructor(modelName, url) {
-    mongoose.connect('mongodb:' + url);
+// class Stops () {
+//   constructor(modelName, url) {
+//     mongoose.connect('mongodb:' + url);
 
-    this._schema = new mongoose.Schema({
-      name: {type: String, required: true}       //The name of the stop
-      address: {type: String, required: true}    //The address of the stop as a string
-      latitude: {type: Number, required: true}   //The latitude of the stop
-      longitude: {type: Number, required: true}  //The longitude of the stop
-      rating: {type: Number, min: 0, max: 5}     //The stop's Yelp rating from 0 - 5
-      price: {type: Number, min: 1, max: 5}      //The stop's Yelp price, 1 - 5 $'s
-      tags: [String]            //Optional tags for the stop.  E.g. "irish pub", "michelin star", "non-smoking", etc.
-    });
+//     this._schema = new mongoose.Schema({
+//       name: {type: String, required: true}       //The name of the stop
+//       address: {type: String, required: true}    //The address of the stop as a string
+//       latitude: {type: Number, required: true}   //The latitude of the stop
+//       longitude: {type: Number, required: true}  //The longitude of the stop
+//       rating: {type: Number, min: 0, max: 5}     //The stop's Yelp rating from 0 - 5
+//       price: {type: Number, min: 1, max: 5}      //The stop's Yelp price, 1 - 5 $'s
+//       tags: [String]            //Optional tags for the stop.  E.g. "irish pub", "michelin star", "non-smoking", etc.
+//     });
 
-    this._name = modelName;
+//     this._name = modelName;
 
-    this._model = mongoose.Model(modelName, this._Schema);
-  }
+//     this._model = mongoose.Model(modelName, this._Schema);
+//   }
 
-  addStop(data, callback) {
-    this._model.create(data, callback);
-  }
+//   addStop(data, callback) {
+//     this._model.create(data, callback);
+//   }
 
-  removeStops(options, callback) {
-    this._model.remove(options, callback);
-  }
+//   removeStops(options, callback) {
+//     this._model.remove(options, callback);
+//   }
 
-  updateStops(options, data, callback) {
-    this._model.update(id, data, callback);
-  }
+//   updateStops(options, data, callback) {
+//     this._model.update(id, data, callback);
+//   }
 
-  findOneStop(options, callback) {
-    this._model.findOne(options, callback);
-  }
+//   findOneStop(options, callback) {
+//     this._model.findOne(options, callback);
+//   }
 
-  findStops(options, callback) {
-    this._model.find(options, callback);
-  }
-}
+//   findStops(options, callback) {
+//     this._model.find(options, callback);
+//   }
+// }
 

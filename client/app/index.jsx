@@ -14,7 +14,11 @@ const GOOGLEPLEX = {
 class Map extends React.Component {
   constructor(props) {
     super(props);
-    this.panTo = this.panTo.bind(this);
+    // this.state = {
+    //   startLoc: HACK_REACTOR,
+    //   waypoints: []
+    // };
+    this.panToLoc = this.panToLoc.bind(this);
   }
   
   // make use of React Software Component Lifecycle
@@ -24,6 +28,7 @@ class Map extends React.Component {
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
+    console.log(this.map);
     this.directionsService = new google.maps.DirectionsService();
     this.directionsDisplay = new google.maps.DirectionsRenderer();
 
@@ -42,12 +47,39 @@ class Map extends React.Component {
 	     }
 	   }.bind(this));
   }
-  
-  panTo(location) {
-    this.map.panTo(location)
+
+  // renderRoute() {
+  //   //need to calculate farthest away waypoint and set to endLoc
+  //   var endLoc = waypoints[0];
+
+  //   var request = {
+  //     origin: this.state.startLoc,
+  //     destination: endLoc.location,
+  //     travelMode: 'WALKING',
+  //     waypoints: this.state.waypoints,
+  //     optimizeWaypoints: true
+  //   }
+
+  //   this.directionsService.route(request, function(response, status) {
+  //     if (status == google.maps.DirectionsStatus.OK) {
+  //       this.directionsDisplay.setDirections(response);
+  //     }
+  //   });
+  // }
+
+  panToLoc(location) {
+    console.log(this.map);
+    this.map.panTo(location);
   }
 
   render() {
+
+    console.log(this);
+    console.log(this.state);
+    // if (this.state.waypoints.length > 0) {
+    //   this.renderRoute();
+    // }
+
     const mapStyle = {
       width: 500,
       height: 300,
@@ -62,8 +94,8 @@ class Map extends React.Component {
     return (
     	<div>
 	    	<div>	
-          <button onClick={this.panTo(HACK_REACTOR).bind(this)}>Go to Hack Reactor</button>
-          <button onClick={this.panTo(GOOGLEPLEX).bind(this)}>Go to Googleplex</button>
+          <button onClick={this.panToLoc(HACK_REACTOR).bind(this)}>Go to Hack Reactor</button>
+          <button onClick={this.panToLoc(GOOGLEPLEX).bind(this)}>Go to Googleplex</button>
 	      </div>
 	      <div style={mapDivStyle}>
 	        <div ref="map" style={mapStyle}>I should be a map!</div>

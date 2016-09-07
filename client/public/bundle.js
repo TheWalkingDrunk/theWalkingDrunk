@@ -21990,9 +21990,13 @@
 	  function Map(props) {
 	    _classCallCheck(this, Map);
 	
+	    // this.state = {
+	    //   startLoc: HACK_REACTOR,
+	    //   waypoints: []
+	    // };
 	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 	
-	    _this.panToHackReactor = _this.panToHackReactor.bind(_this);
+	    _this.panToLoc = _this.panToLoc.bind(_this);
 	    return _this;
 	  }
 	
@@ -22007,6 +22011,7 @@
 	        mapTypeId: google.maps.MapTypeId.ROADMAP
 	      });
 	
+	      console.log(this.map);
 	      this.directionsService = new google.maps.DirectionsService();
 	      this.directionsDisplay = new google.maps.DirectionsRenderer();
 	
@@ -22025,19 +22030,42 @@
 	        }
 	      }.bind(this));
 	    }
+	
+	    // renderRoute() {
+	    //   //need to calculate farthest away waypoint and set to endLoc
+	    //   var endLoc = waypoints[0];
+	
+	    //   var request = {
+	    //     origin: this.state.startLoc,
+	    //     destination: endLoc.location,
+	    //     travelMode: 'WALKING',
+	    //     waypoints: this.state.waypoints,
+	    //     optimizeWaypoints: true
+	    //   }
+	
+	    //   this.directionsService.route(request, function(response, status) {
+	    //     if (status == google.maps.DirectionsStatus.OK) {
+	    //       this.directionsDisplay.setDirections(response);
+	    //     }
+	    //   });
+	    // }
+	
 	  }, {
-	    key: 'panToHackReactor',
-	    value: function panToHackReactor() {
-	      this.map.panTo(HACK_REACTOR);
-	    }
-	  }, {
-	    key: 'panToGoogleplex',
-	    value: function panToGoogleplex() {
-	      this.map.panTo(GOOGLEPLEX);
+	    key: 'panToLoc',
+	    value: function panToLoc(location) {
+	      console.log(this.map);
+	      this.map.panTo(location);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	
+	      console.log(this);
+	      console.log(this.state);
+	      // if (this.state.waypoints.length > 0) {
+	      //   this.renderRoute();
+	      // }
+	
 	      var mapStyle = {
 	        width: 500,
 	        height: 300
@@ -22057,12 +22085,12 @@
 	          null,
 	          _react2.default.createElement(
 	            'button',
-	            { onClick: this.panToHackReactor.bind(this) },
+	            { onClick: this.panToLoc(HACK_REACTOR).bind(this) },
 	            'Go to Hack Reactor'
 	          ),
 	          _react2.default.createElement(
 	            'button',
-	            { onClick: this.panToGoogleplex.bind(this) },
+	            { onClick: this.panToLoc(GOOGLEPLEX).bind(this) },
 	            'Go to Googleplex'
 	          )
 	        ),
