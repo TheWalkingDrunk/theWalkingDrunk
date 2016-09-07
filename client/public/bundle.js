@@ -21984,19 +21984,29 @@
 	  lng: -122.084036
 	};
 	
+	var WAYPOINTS = [{
+	  location: '757 Leavenworth San Francisco, CA',
+	  stopover: true
+	}, {
+	  location: 'Civic Center, SF',
+	  stopover: true
+	}, {
+	  location: 'Union Square, SF',
+	  stopover: true
+	}];
+	
 	var Map = function (_React$Component) {
 	  _inherits(Map, _React$Component);
 	
 	  function Map(props) {
 	    _classCallCheck(this, Map);
 	
-	    // this.state = {
-	    //   startLoc: HACK_REACTOR,
-	    //   waypoints: []
-	    // };
 	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 	
-	    _this.panToLoc = _this.panToLoc.bind(_this);
+	    _this.state = {
+	      startLoc: HACK_REACTOR,
+	      waypoints: WAYPOINTS
+	    };
 	    return _this;
 	  }
 	
@@ -22011,7 +22021,6 @@
 	        mapTypeId: google.maps.MapTypeId.ROADMAP
 	      });
 	
-	      console.log(this.map);
 	      this.directionsService = new google.maps.DirectionsService();
 	      this.directionsDisplay = new google.maps.DirectionsRenderer();
 	
@@ -22024,47 +22033,46 @@
 	        travelMode: google.maps.DirectionsTravelMode.WALKING
 	      };
 	
+	      if (this.state.waypoints.length > 0) {
+	        console.log(this.getRoute());
+	        request = this.getRoute();
+	      }
+	
 	      this.directionsService.route(request, function (response, status) {
 	        if (status == google.maps.DirectionsStatus.OK) {
 	          this.directionsDisplay.setDirections(response);
 	        }
 	      }.bind(this));
 	    }
-	
-	    // renderRoute() {
-	    //   //need to calculate farthest away waypoint and set to endLoc
-	    //   var endLoc = waypoints[0];
-	
-	    //   var request = {
-	    //     origin: this.state.startLoc,
-	    //     destination: endLoc.location,
-	    //     travelMode: 'WALKING',
-	    //     waypoints: this.state.waypoints,
-	    //     optimizeWaypoints: true
-	    //   }
-	
-	    //   this.directionsService.route(request, function(response, status) {
-	    //     if (status == google.maps.DirectionsStatus.OK) {
-	    //       this.directionsDisplay.setDirections(response);
-	    //     }
-	    //   });
-	    // }
-	
 	  }, {
-	    key: 'panToLoc',
-	    value: function panToLoc(location) {
-	      console.log(this.map);
-	      this.map.panTo(location);
+	    key: 'panToGoogleplex',
+	    value: function panToGoogleplex() {
+	      this.map.panTo(GOOGLEPLEX);
+	    }
+	  }, {
+	    key: 'panTo',
+	    value: function panTo() {
+	      this.map.panTo(this.state.startLoc);
+	    }
+	  }, {
+	    key: 'getRoute',
+	    value: function getRoute() {
+	      //need to calculate farthest away waypoint and set to endLoc
+	      var endLoc = this.state.waypoints[0];
+	
+	      var request = {
+	        origin: this.state.startLoc,
+	        destination: endLoc.location,
+	        travelMode: google.maps.DirectionsTravelMode.WALKING,
+	        waypoints: this.state.waypoints,
+	        optimizeWaypoints: true
+	      };
+	
+	      return request;
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	
-	      console.log(this);
-	      console.log(this.state);
-	      // if (this.state.waypoints.length > 0) {
-	      //   this.renderRoute();
-	      // }
 	
 	      var mapStyle = {
 	        width: 500,
@@ -22085,12 +22093,12 @@
 	          null,
 	          _react2.default.createElement(
 	            'button',
-	            { onClick: this.panToLoc(HACK_REACTOR).bind(this) },
+	            { onClick: this.panTo.bind(this) },
 	            'Go to Hack Reactor'
 	          ),
 	          _react2.default.createElement(
 	            'button',
-	            { onClick: this.panToLoc(GOOGLEPLEX).bind(this) },
+	            { onClick: this.panToGoogleplex.bind(this) },
 	            'Go to Googleplex'
 	          )
 	        ),
