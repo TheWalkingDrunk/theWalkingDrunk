@@ -66,6 +66,20 @@ class Map extends React.Component {
      }.bind(this));
   }
   
+  componentDidUpdate() {
+    if (this.state.waypoints.length > 0) {
+      console.log('In update:', this.getRoute());
+      var request = this.getRoute();
+
+     this.directionsService.route(request, function(response, status) {
+       if (status == google.maps.DirectionsStatus.OK) {
+         this.directionsDisplay.setDirections(response);
+       }
+     }.bind(this));
+    }
+    //this.render();
+  }
+
   panToGoogleplex(){
     this.map.panTo(GOOGLEPLEX);
   }
@@ -89,6 +103,13 @@ class Map extends React.Component {
     return request;
   }
 
+  handleLocationSubmit(e) {
+    e.preventDefault();
+    this.setState({
+      startLoc: this.refs.location.value
+    });
+    console.log(this.state.startLoc);
+  }
   render() {
 
     const mapStyle = {
@@ -104,10 +125,15 @@ class Map extends React.Component {
 
     return (
       <div>
+        <form onSubmit={this.handleLocationSubmit.bind(this)}>
+          <input placeholder="Your location" type="text" ref="location"/>
+        </form>
+      {/*
         <div> 
           <button onClick={this.panTo.bind(this)}>Go to Hack Reactor</button>
           <button onClick={this.panToGoogleplex.bind(this)}>Go to Googleplex</button>
         </div>
+      */}
         <div style={mapDivStyle}>
           <div ref="map" style={mapStyle}>I should be a map!</div>
         </div>

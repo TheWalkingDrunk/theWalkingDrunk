@@ -22045,6 +22045,21 @@
 	      }.bind(this));
 	    }
 	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      if (this.state.waypoints.length > 0) {
+	        console.log('In update:', this.getRoute());
+	        var request = this.getRoute();
+	
+	        this.directionsService.route(request, function (response, status) {
+	          if (status == google.maps.DirectionsStatus.OK) {
+	            this.directionsDisplay.setDirections(response);
+	          }
+	        }.bind(this));
+	      }
+	      //this.render();
+	    }
+	  }, {
 	    key: 'panToGoogleplex',
 	    value: function panToGoogleplex() {
 	      this.map.panTo(GOOGLEPLEX);
@@ -22071,6 +22086,15 @@
 	      return request;
 	    }
 	  }, {
+	    key: 'handleLocationSubmit',
+	    value: function handleLocationSubmit(e) {
+	      e.preventDefault();
+	      this.setState({
+	        startLoc: this.refs.location.value
+	      });
+	      console.log(this.state.startLoc);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	
@@ -22089,18 +22113,9 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'button',
-	            { onClick: this.panTo.bind(this) },
-	            'Go to Hack Reactor'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            { onClick: this.panToGoogleplex.bind(this) },
-	            'Go to Googleplex'
-	          )
+	          'form',
+	          { onSubmit: this.handleLocationSubmit.bind(this) },
+	          _react2.default.createElement('input', { placeholder: 'Your location', type: 'text', ref: 'location' })
 	        ),
 	        _react2.default.createElement(
 	          'div',
