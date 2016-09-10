@@ -62,8 +62,15 @@
 	// Get main React component.
 	var App = __webpack_require__(/*! ./index.jsx */ 172);
 	
-	// ReactDOM render
-	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
+	if (navigator.geolocation) {
+	  navigator.geolocation.getCurrentPosition(function (position) {
+	    var pos = position.coords.latitude + ', ' + position.coords.longitude;
+	    _reactDom2.default.render(_react2.default.createElement(App, { startLoc: pos }), document.getElementById('app'));
+	  });
+	} else {
+	  console.log('Geolocation not enabled by browser');
+	  _reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
+	}
 
 /***/ },
 /* 1 */
@@ -22003,7 +22010,7 @@
 	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 	
 	    _this.state = {
-	      startLoc: 'Hack Reactor SF',
+	      startLoc: _this.props.startLoc || 'SF',
 	      waypoints: []
 	    };
 	    _this.visited = {};
@@ -22126,35 +22133,42 @@
 	      var _this6 = this;
 	
 	      //geocode address into google.maps.LatLng object
+	      this.geocodeAddress(address, function (latLng) {
+	        var request = {
+	          location: latLng,
+	          keyword: 'bar',
+	          rankBy: google.maps.places.RankBy.DISTANCE
+	        };
+	        //nearby search of coordinates of address
+	        _this6.placesService.nearbySearch(request, function (results, status) {
+	          if (status === google.maps.places.PlacesServiceStatus.OK) {
+	            //set new waypoint equal to first unvisited bar
+	            var i = 0;
+	            while (_this6.visited[results[i].vicinity]) {
+	              console.log(results[i].vicinity);
+	              i++;
+	            }
+	
+	            var waypoint = {
+	              location: results[i].vicinity,
+	              stopover: true
+	            };
+	
+	            _this6.visited[waypoint.location] = true;
+	
+	            callback(_this6.state.waypoints.concat(waypoint));
+	          }
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'geocodeAddress',
+	    value: function geocodeAddress(address, callback) {
 	      this.geocoder.geocode({
 	        address: address
 	      }, function (results, status) {
 	        if (status === 'OK') {
-	          var request = {
-	            location: results[0].geometry.location,
-	            keyword: 'bar',
-	            rankBy: google.maps.places.RankBy.DISTANCE
-	          };
-	          //nearby search of coordinates of address
-	          _this6.placesService.nearbySearch(request, function (results, status) {
-	            if (status === google.maps.places.PlacesServiceStatus.OK) {
-	              //set new waypoint equal to first unvisited bar
-	              var i = 0;
-	              while (_this6.visited[results[i].vicinity]) {
-	                console.log(results[i].vicinity);
-	                i++;
-	              }
-	
-	              var waypoint = {
-	                location: results[i].vicinity,
-	                stopover: true
-	              };
-	
-	              _this6.visited[waypoint.location] = true;
-	
-	              callback(_this6.state.waypoints.concat(waypoint));
-	            }
-	          });
+	          callback(results[0].geometry.location);
 	        }
 	      });
 	    }

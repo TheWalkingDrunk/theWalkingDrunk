@@ -127,38 +127,43 @@ class Map extends React.Component {
 
   getWaypoints(address, callback) {
     //geocode address into google.maps.LatLng object
+    this.geocodeAddress(address, (latLng) => {
+      var request = {
+        location: latLng,
+        keyword: 'bar',
+        rankBy: google.maps.places.RankBy.DISTANCE
+      }
+      //nearby search of coordinates of address
+      this.placesService.nearbySearch(request, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          //set new waypoint equal to first unvisited bar
+          var i = 0;
+          while (this.visited[results[i].vicinity]) {
+            console.log(results[i].vicinity);
+            i++;
+          }
+
+          var waypoint = {
+            location: results[i].vicinity,
+            stopover: true
+          };
+
+          this.visited[waypoint.location] = true;
+
+          callback(this.state.waypoints.concat(waypoint));
+        }
+      });
+    });
+  }
+
+  geocodeAddress(address, callback) {
     this.geocoder.geocode({
       address: address
     }, (results, status) => {
       if (status === 'OK') {
-        var request = {
-          location: results[0].geometry.location,
-          keyword: 'bar',
-          rankBy: google.maps.places.RankBy.DISTANCE
-        }
-        //nearby search of coordinates of address
-        this.placesService.nearbySearch(request, (results, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            //set new waypoint equal to first unvisited bar
-            var i = 0;
-            while (this.visited[results[i].vicinity]) {
-              console.log(results[i].vicinity);
-              i++;
-            }
-
-            var waypoint = {
-              location: results[i].vicinity,
-              stopover: true
-            };
-
-            this.visited[waypoint.location] = true;
-
-            callback(this.state.waypoints.concat(waypoint));
-          }
-        });
-      }  
+        callback(results[0].geometry.location);
+      }
     });
-
   }
 
   render() {
