@@ -1,5 +1,5 @@
 import React from 'react';
-var map = window.Map;
+const map = window.Map;
 
 class Map extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class Map extends React.Component {
 
   componentDidUpdate() {
     if (this.state.waypoints.length > 0) {
-      var request = this.getRouteRequest();
+      const request = this.getRouteRequest();
       this.directionsService.route(request, (response, status) => {
         if (status == google.maps.DirectionsStatus.OK) {
           this.directionsDisplay.setDirections(response);
@@ -48,9 +48,9 @@ class Map extends React.Component {
 
   getRouteRequest() {
     //need to calculate farthest away waypoint and set to endLoc
-    var endLoc = this.state.waypoints[this.state.waypoints.length - 1];
+    const endLoc = this.state.waypoints[this.state.waypoints.length - 1];
 
-    var request = {
+    const request = {
       origin: this.state.startLoc,
       destination: endLoc.location,
       travelMode: google.maps.DirectionsTravelMode.WALKING,
@@ -67,7 +67,7 @@ class Map extends React.Component {
       e.preventDefault();
     }
 
-    var address;
+    let address;
     if (this.state.waypoints[this.state.waypoints.length - 1]) {
       address = this.state.waypoints[this.state.waypoints.length - 1].location;
     } else if (this.refs.location.value) {
@@ -86,7 +86,7 @@ class Map extends React.Component {
 
   handleLocationSubmit(e) {
     e.persist();
-    var startLoc = this.refs.location.value;
+    const startLoc = this.refs.location.value;
     this.setState({
       startLoc: startLoc,
       waypoints: [],
@@ -108,7 +108,7 @@ class Map extends React.Component {
   getWaypoints(address, callback) {
     //geocode address into google.maps.LatLng object
     this.geocodeAddress(address, (latLng) => {
-      var request = {
+      const request = {
         location: latLng,
         types: ['bar'],
         rankBy: google.maps.places.RankBy.DISTANCE
@@ -117,21 +117,21 @@ class Map extends React.Component {
       this.placesService.nearbySearch(request, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           //set new waypoint equal to first unvisited bar
-          var i = 0;
+          let i = 0;
           while (this.visited[results[i].vicinity]) {
             i++;
           }
 
-          var waypoint = {
+          const waypoint = {
             location: results[i].vicinity,
             stopover: true
           };
 
           this.visited[waypoint.location] = true;
 
-          var waypoints = this.state.waypoints.concat(waypoint);
+          const waypoints = this.state.waypoints.concat(waypoint);
 
-          var results = {
+          const results = {
             waypoints: waypoints,
             current: results[i]
           };
