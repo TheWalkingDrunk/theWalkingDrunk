@@ -1,7 +1,7 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-var app = express();
+const app = express();
 
 // parse application/x-www-form-urlencoded 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -11,6 +11,4 @@ app.use(bodyParser.json());
 
 require('./routes.js')(app, express);
 
-app.listen('3000', function(){
-	console.log('NodeJS + Express server listening at http://localhost:3000');
-});
+app.listen('3000', () => console.log('NodeJS + Express server listening at http://localhost:3000'));

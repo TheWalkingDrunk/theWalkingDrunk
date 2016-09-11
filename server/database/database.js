@@ -4,31 +4,31 @@
 // create Model
 // export utilityFunctions
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // connect to DB
 mongoose.connect('mongodb://localhost/test');
 
 // check connection
-mongoose.connection.on('error', function(err) {
+mongoose.connection.on('error', (err) => {
     console.log('Mongo Error:\n');
     console.log(err);
-}).on('open', function() {
+}).on('open', () => {
     console.log('Connection opened');
 });
 
 // define Mongoose Schema
-var pubSchema = new Schema({
+const pubSchema = new Schema({
   currPub: String,
   nextPubs: String
 });
 
 // define Mongoose Model
-var Pubs = mongoose.model('Pubs', pubSchema);
+const Pubs = mongoose.model('Pubs', pubSchema);
 
 // Utility object to be exported
-var utils = {};
+const utils = {};
 
 utils.cachePubRoutes = (req, res) => {
   new Pubs({

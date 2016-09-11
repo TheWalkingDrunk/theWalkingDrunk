@@ -1,5 +1,5 @@
-var mocha = require('mocha');
-var chai = require('chai');
+const mocha = require('mocha');
+const chai = require('chai');
 
 const testData = {}
   valid1: {name: 'foo', address: '123 Foo Street', latitude: 1.2, longitude: 3.4, rating: 1, price: 2, tags: ['irish']},  //Valid test data

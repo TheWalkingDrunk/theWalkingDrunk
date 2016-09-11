@@ -1,6 +1,6 @@
-var yelp = require("node-yelp");
+const yelp = require("node-yelp");
 
-var client = yelp.createClient({
+const client = yelp.createClient({
   oauth: {
     "consumer_key": "_Qs9S9ohkGj32ygCz0vhyA",
     "consumer_secret": "qA3YVgM_Z31LVHSV9qRLxtriboE",
