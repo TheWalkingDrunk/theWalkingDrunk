@@ -23,6 +23,14 @@ module.exports = function (app, express) {
       db.cachePubRoutes(req, res);
     });
 
+  app.route('/yelp/search')
+    .get(function(req, res){
+      console.log('GET - /yelp/search');
+
+      // replace with memoization feature
+      yelpSearch(req, res);
+    });
+
   app.use(function(req, res){
     res.status(404);
 
