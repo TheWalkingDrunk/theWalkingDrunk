@@ -52,8 +52,11 @@ utils.cachePubRoutes = (req, res) => {
 // make promise then it will work
 utils.retrievePubRoutes = (req, res) => {
   Pubs.findOne({currPub:req.headers.currpub}, (err, query) => {
-      if (err) throw err;
-      res.send(query)
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(query)
+      }
     });
 };
 

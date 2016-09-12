@@ -5,6 +5,11 @@ class CurrInfoComponent extends React.Component {
 		super(props);
 	}
 
+	componentDidUpdate(){
+		// if (this.props.current.photos)
+		// 	console.log(this.props.current.photos[0].getUrl())
+	}
+
 	render(){
 		return (
 			<div>

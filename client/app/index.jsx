@@ -1,7 +1,7 @@
 import React from 'react';
 var map = window.Map;
-// var FrontEndStyling = require('./frontEndStyling.jsx');
-const CurrInfoComponent = require('./CurrInfoComponent.jsx');
+var CurrInfoComponent = require('./CurrInfoComponent.jsx');
+var utils = require('./utils.js');
 
 class Map extends React.Component {
   //Tests:
@@ -39,7 +39,12 @@ class Map extends React.Component {
     this.geocoder = new google.maps.Geocoder();
     this.placesService = new google.maps.places.PlacesService(this.map);
     this.stepDisplay = new google.maps.InfoWindow();
+
+    this.getRouteRequest = utils.getRouteRequest.bind(this);
+    this.geocodeAddress = utils.geocodeAddress.bind(this);
+    this.getWaypoints = utils.getWaypoints.bind(this);
   }
+
 
   //Re-render the map and directions when the state changes:
   //Tests:
@@ -53,25 +58,6 @@ class Map extends React.Component {
         }
       });
     }
-  }
-
-  //Form a request that is sent to the mapping API:
-  //Tests:
-  //The destination is the furthest location in the waypoints array.
-  getRouteRequest() {
-    //need to calculate farthest away waypoint and set to endLoc
-    var endLoc = this.state.waypoints[this.state.waypoints.length - 1];
-
-    var request = {
-      origin: this.state.startLoc,
-      destination: endLoc.location,
-      travelMode: google.maps.DirectionsTravelMode.WALKING,
-      //last waypoint already the destination
-      waypoints: this.state.waypoints.slice(0, -1),
-      optimizeWaypoints: false
-    }
-
-    return request;
   }
 
   //Called when the user clicks the "Next Bar" button.
@@ -137,67 +123,6 @@ class Map extends React.Component {
       waypoints: this.state.waypoints.slice(0, -1)
     }, () => {
       this.handleNextBar(e);
-    });
-  }
-
-  //Finds an array of waypoints and passes them to a callback:
-  //Tests:
-  //Passes results to the callback.
-  //No item is in the waypoint array more than once.
-  getWaypoints(address, callback) {
-    //geocode address into google.maps.LatLng object
-    this.geocodeAddress(address, (latLng) => {
-      //Construct the request object:
-      var request = {
-        location: latLng,
-        types: ['bar'],
-        rankBy: google.maps.places.RankBy.DISTANCE
-      }
-      //Search for bars near the geocoded location:
-      this.placesService.nearbySearch(request, (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          //set new waypoint equal to first unvisited bar
-          var i = 0;
-          while (this.visited[results[i].vicinity]) {
-            i++;
-            if (!results[i]) {
-              break;
-            }
-          }
-
-          var current = results[i] ? results[i] : this.state.current;
-
-          var waypoint = {
-            location: current.vicinity,
-            stopover: true
-          };
-
-          this.visited[waypoint.location] = true;
-
-          var waypoints = this.state.waypoints.concat(waypoint);
-
-          var results = {
-            waypoints: waypoints,
-            current: current
-          };
-
-          callback(results);
-        }
-      });
-    });
-  }
-
-  //Geocodes an address and passes the associated latitude and longitude
-  //to a callback.
-  //Tests:
-  // Geocache Hack Reactor's website, verify that it finds the correct longitude and latitude.
-  geocodeAddress(address, callback) {
-    this.geocoder.geocode({
-      address: address
-    }, (results, status) => {
-      if (status === 'OK') {
-        callback(results[0].geometry.location);
-      }
     });
   }
 
